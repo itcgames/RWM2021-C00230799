@@ -1,69 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
-
-public class Pair<T, U>
-{
-    public T m_first { get; set; }
-    public U m_second { get; set; }
-
-    public Pair()
-    {
-
-    }
-
-    public Pair(T t_first, U t_second)
-    {
-        this.m_first = t_first;
-        this.m_second = t_second;
-    }
-}
 
 public class Upgrade
 {
-    private Pair<string, int> m_upgradePair = new Pair<string, int>("", 0);
-    
-    public Upgrade() { }
+    [SerializeField]
+    private string m_upgradeName;
+    [SerializeField]
+    private int m_upgradeLevel;
 
-    public Upgrade(Pair<string, int> t_pair)
+    public Upgrade(string name, int level) 
     {
-        m_upgradePair = t_pair;
+        m_upgradeName = name;
+        m_upgradeLevel = level;
     }
 
     public void IncreaseLevel()
     {
-        m_upgradePair.m_second += 1;
+        m_upgradeLevel += 1;
     }
 
     public void DecreaseLevel()
     {
-        m_upgradePair.m_second -= 1;
+        m_upgradeLevel -= 1;
     }
 
     public void SetLevel(int t_level)
     {
-        m_upgradePair.m_second = t_level;
+        m_upgradeLevel = t_level;
     }
 
     public string GetUpgradeName()
     {
-        return m_upgradePair.m_first;
+        return m_upgradeName;
     }
 
     public int GetUpgradeLevel()
     {
-        return m_upgradePair.m_second;
-    }
-
-    public Pair<string, int> GetUpgradePair()
-    {
-        return m_upgradePair;
+        return m_upgradeLevel;
     }
 }
 
 public class UpgradeSystem
 {
     private List<Upgrade> m_upgradeList = new List<Upgrade>();
+    string jsonSavePath;
 
     public UpgradeSystem() { }
 
@@ -79,7 +61,7 @@ public class UpgradeSystem
 
     public Upgrade GetUpgrade(string t_name)
     {
-        foreach(Upgrade upgrade in m_upgradeList)
+        foreach (Upgrade upgrade in m_upgradeList)
         {
             if (upgrade.GetUpgradeName() == t_name)
             {
@@ -87,5 +69,33 @@ public class UpgradeSystem
             }
         }
         return null;
+    }
+
+    public void SaveUpgrades()
+    {
+        string jsonString = "";
+        string finalString = "[";
+        int listCount = m_upgradeList.Count;
+        int index = 1;
+
+        jsonSavePath = Application.persistentDataPath + "/upgrades.json";
+
+        foreach (Upgrade upgrade in m_upgradeList)
+        {
+            if (index != listCount)
+            {
+                jsonString = JsonUtility.ToJson(upgrade, true);
+                finalString += jsonString + ",";
+            }
+            else
+            {
+                jsonString = JsonUtility.ToJson(upgrade, true);
+                finalString += jsonString;
+            }
+            index++;
+        }
+
+        finalString += "]";
+        File.WriteAllText(jsonSavePath, finalString);
     }
 }

@@ -12,7 +12,7 @@ namespace Tests
         [UnityTest]
         public IEnumerator UpgradeObjectCreationTest()
         {
-            Upgrade testUpgrade = new Upgrade(new Pair<string, int>("Attack", 1));
+            Upgrade testUpgrade = new Upgrade("Attack", 1);
             Assert.IsNotNull(testUpgrade);
             int tempUpgradeLevel = testUpgrade.GetUpgradeLevel();
             testUpgrade.IncreaseLevel();
@@ -26,7 +26,7 @@ namespace Tests
             UpgradeSystem upgradeSystem = new UpgradeSystem();
             int listCount = upgradeSystem.GetUpgradeCount();
             Assert.AreEqual(listCount, 0);
-            Upgrade testUpgrade = new Upgrade(new Pair<string, int>("Attack", 1));
+            Upgrade testUpgrade = new Upgrade("Attack", 1);
             upgradeSystem.AddUpgrade(testUpgrade);
             listCount = upgradeSystem.GetUpgradeCount();
             Assert.AreEqual(listCount, 1);
@@ -37,7 +37,7 @@ namespace Tests
         public IEnumerator UpgradeObjectRetrievalTest()
         {
             UpgradeSystem upgradeSystem = new UpgradeSystem();
-            Upgrade testUpgrade = new Upgrade(new Pair<string, int>("Attack", 1));
+            Upgrade testUpgrade = new Upgrade("Attack", 1);
             upgradeSystem.AddUpgrade(testUpgrade);
             Upgrade testUpgrade2 = upgradeSystem.GetUpgrade("Attack");
             Assert.AreEqual("Attack", testUpgrade2.GetUpgradeName());
@@ -48,7 +48,7 @@ namespace Tests
         public IEnumerator UpgradeLevelTest()
         {
             UpgradeSystem upgradeSystem = new UpgradeSystem();
-            Upgrade testUpgrade = new Upgrade(new Pair<string, int>("Attack", 1));
+            Upgrade testUpgrade = new Upgrade("Attack", 1);
             upgradeSystem.AddUpgrade(testUpgrade);
             int upgradeLevel = upgradeSystem.GetUpgrade("Attack").GetUpgradeLevel();
             upgradeSystem.GetUpgrade("Attack").IncreaseLevel();
@@ -56,6 +56,24 @@ namespace Tests
             upgradeLevel = upgradeSystem.GetUpgrade("Attack").GetUpgradeLevel();
             upgradeSystem.GetUpgrade("Attack").SetLevel(0);
             Assert.AreNotEqual(upgradeLevel, upgradeSystem.GetUpgrade("Attack").GetUpgradeLevel());
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JSONWriteTest()
+        {
+            UpgradeSystem upgradeSystem = new UpgradeSystem();
+            Upgrade testUpgrade = new Upgrade("Attack", 1);
+            upgradeSystem.AddUpgrade(testUpgrade);
+            testUpgrade = new Upgrade("Speed", 2);
+            upgradeSystem.AddUpgrade(testUpgrade);
+            testUpgrade = new Upgrade("Range", 5);
+            upgradeSystem.AddUpgrade(testUpgrade);
+            testUpgrade = new Upgrade("Power", 20);
+            upgradeSystem.AddUpgrade(testUpgrade);
+            testUpgrade = new Upgrade("Accuracy", 3);
+            upgradeSystem.AddUpgrade(testUpgrade);
+            upgradeSystem.SaveUpgrades();
             yield return null;
         }
     }
