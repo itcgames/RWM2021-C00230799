@@ -45,7 +45,7 @@ public class Upgrade
 public class UpgradeSystem
 {
     private List<Upgrade> m_upgradeList = new List<Upgrade>();
-    string jsonSavePath;
+    string jsonSavePath = Application.persistentDataPath + "/upgrades.json";
 
     public UpgradeSystem() { }
 
@@ -73,12 +73,10 @@ public class UpgradeSystem
 
     public void SaveUpgrades()
     {
-        string jsonString = "";
+        string jsonString;
         string finalString = "[";
         int listCount = m_upgradeList.Count;
         int index = 1;
-
-        jsonSavePath = Application.persistentDataPath + "/upgrades.json";
 
         foreach (Upgrade upgrade in m_upgradeList)
         {
@@ -97,5 +95,18 @@ public class UpgradeSystem
 
         finalString += "]";
         File.WriteAllText(jsonSavePath, finalString);
+    }
+
+    public void LoadUpgrades()
+    {
+        Upgrade tempUpgrade;
+        string jsonString, finalString;
+
+        jsonString = File.ReadAllText(jsonSavePath);
+        jsonString = jsonString.Remove(0, 1);
+        finalString = jsonString.Remove(jsonString.Length - 1, 1);
+
+        tempUpgrade = JsonUtility.FromJson<Upgrade>(finalString);
+        AddUpgrade(tempUpgrade);
     }
 }

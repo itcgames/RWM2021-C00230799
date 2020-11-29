@@ -65,15 +65,21 @@ namespace Tests
             UpgradeSystem upgradeSystem = new UpgradeSystem();
             Upgrade testUpgrade = new Upgrade("Attack", 1);
             upgradeSystem.AddUpgrade(testUpgrade);
-            testUpgrade = new Upgrade("Speed", 2);
+            /*testUpgrade = new Upgrade("Speed", 2);
             upgradeSystem.AddUpgrade(testUpgrade);
             testUpgrade = new Upgrade("Range", 5);
-            upgradeSystem.AddUpgrade(testUpgrade);
-            testUpgrade = new Upgrade("Power", 20);
-            upgradeSystem.AddUpgrade(testUpgrade);
-            testUpgrade = new Upgrade("Accuracy", 3);
-            upgradeSystem.AddUpgrade(testUpgrade);
+            upgradeSystem.AddUpgrade(testUpgrade);*/ 
             upgradeSystem.SaveUpgrades();
+            yield return null;
+        }
+
+        [UnityTest]
+        public IEnumerator JSONReadTest()
+        {
+            UpgradeSystem upgradeSystem = new UpgradeSystem();
+            int listCount = upgradeSystem.GetUpgradeCount();
+            upgradeSystem.LoadUpgrades();
+            Assert.AreNotEqual(listCount, upgradeSystem.GetUpgradeCount());
             yield return null;
         }
     }
