@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class Upgrade
 {
-    [SerializeField]
+    [JsonProperty]
     private string m_upgradeName;
-    [SerializeField]
+    [JsonProperty]
     private int m_upgradeLevel;
 
     public Upgrade(string name, int level) 
@@ -44,6 +45,7 @@ public class Upgrade
 
 public class UpgradeSystem
 {
+    [JsonProperty]
     private List<Upgrade> m_upgradeList = new List<Upgrade>();
     string jsonSavePath = Application.persistentDataPath + "/upgrades.json";
 
@@ -74,39 +76,20 @@ public class UpgradeSystem
     public void SaveUpgrades()
     {
         string jsonString;
-        string finalString = "[";
-        int listCount = m_upgradeList.Count;
-        int index = 1;
 
-        foreach (Upgrade upgrade in m_upgradeList)
-        {
-            if (index != listCount)
-            {
-                jsonString = JsonUtility.ToJson(upgrade, true);
-                finalString += jsonString + ",";
-            }
-            else
-            {
-                jsonString = JsonUtility.ToJson(upgrade, true);
-                finalString += jsonString;
-            }
-            index++;
-        }
-
-        finalString += "]";
-        File.WriteAllText(jsonSavePath, finalString);
+        jsonString = JsonConvert.SerializeObject(m_upgradeList);
+        Debug.Log("UPGRADE SAVE TEST : " + jsonString);
+ 
+        File.WriteAllText(jsonSavePath, jsonString);
     }
 
     public void LoadUpgrades()
     {
-        Upgrade tempUpgrade;
-        string jsonString, finalString;
+        string jsonString;
 
         jsonString = File.ReadAllText(jsonSavePath);
-        jsonString = jsonString.Remove(0, 1);
-        finalString = jsonString.Remove(jsonString.Length - 1, 1);
 
-        tempUpgrade = JsonUtility.FromJson<Upgrade>(finalString);
-        AddUpgrade(tempUpgrade);
+        m_upgradeList = JsonConvert.DeserializeObject<List<Upgrade>>(jsonString);
+        Debug.Log("UPGRADE LOAD TEST (UPGRADE COUNT) : " + GetUpgradeCount());
     }
 }

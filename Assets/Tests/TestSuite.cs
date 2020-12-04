@@ -60,27 +60,31 @@ namespace Tests
         }
 
         [UnityTest]
-        public IEnumerator JSONWriteTest()
-        {
-            UpgradeSystem upgradeSystem = new UpgradeSystem();
-            Upgrade testUpgrade = new Upgrade("Attack", 1);
-            upgradeSystem.AddUpgrade(testUpgrade);
-            /*testUpgrade = new Upgrade("Speed", 2);
-            upgradeSystem.AddUpgrade(testUpgrade);
-            testUpgrade = new Upgrade("Range", 5);
-            upgradeSystem.AddUpgrade(testUpgrade);*/ 
-            upgradeSystem.SaveUpgrades();
-            yield return null;
-        }
+		public IEnumerator JSONWriteTest()
+		{
+			UpgradeSystem upgradeSystem = new UpgradeSystem();
+			Upgrade testUpgrade = new Upgrade("Attack", 1);
+			upgradeSystem.AddUpgrade(testUpgrade);
+			testUpgrade = new Upgrade("Speed", 2);
+			upgradeSystem.AddUpgrade(testUpgrade);
+			testUpgrade = new Upgrade("Range", 5);
+			upgradeSystem.AddUpgrade(testUpgrade);
+			testUpgrade = new Upgrade("Strength", 20);
+			upgradeSystem.AddUpgrade(testUpgrade);
+			testUpgrade = new Upgrade("Accuracy", 7);
+			upgradeSystem.AddUpgrade(testUpgrade);
+			upgradeSystem.SaveUpgrades();
+			yield return null;
+		}
 
-        [UnityTest]
-        public IEnumerator JSONReadTest()
-        {
-            UpgradeSystem upgradeSystem = new UpgradeSystem();
-            int listCount = upgradeSystem.GetUpgradeCount();
-            upgradeSystem.LoadUpgrades();
-            Assert.AreNotEqual(listCount, upgradeSystem.GetUpgradeCount());
-            yield return null;
-        }
+		[UnityTest]
+		public IEnumerator JSONReadTest()
+		{
+			UpgradeSystem upgradeSystem = new UpgradeSystem();
+			int listCount = upgradeSystem.GetUpgradeCount();
+			upgradeSystem.LoadUpgrades();
+			Assert.AreNotEqual(listCount, upgradeSystem.GetUpgradeCount());
+			yield return null;
+		}
     }
 }
